@@ -19,23 +19,23 @@ erDiagram
     USER {
         bigint userId PK
         string name
-        string email UK
+        string email UK "guardado em minusculas"
         string passwordHash
         datetime createdAt
     }
     GENRE {
         int genreId PK
         string name UK
-        text description
+        text description "opcional"
     }
     BOOK {
         bigint bookId PK
         string title
-        text synopsis
-        int publicationYear
-        int pageCount
-        int coverId
-        text language
+        text synopsis "opcional"
+        int publicationYear "opcional"
+        int pageCount "opcional"
+        int coverId "opcional"
+        string language "codigo, ex: por"
         string openLibraryKey UK
     }
     BOOK_GENRE {
@@ -57,8 +57,8 @@ erDiagram
         bigint bookId FK "UNIQUE together with userId"
         string status "Required; CHECK: TO_READ, REJECTED or READ"
         decimal rating "Optional; 0.5 to 5 in steps of 0.5; only when status = READ"
-        datetime swipedAt
-        datetime updatedAt
+        datetime swipedAt "undo uses the most recent"
+        datetime updatedAt "changes on shelf moves"
     }
     USER_GENRE {
         bigint userId PK, FK
