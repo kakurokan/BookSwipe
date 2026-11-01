@@ -30,7 +30,7 @@ Este documento liga cada ecrã às histórias de utilizador que ele cobre. Cada 
 
 ## 2. Registo – Passo 2 (Gostos)
 
-![Registo – Passo 2 (Gostos)](Registo%20–%20Passo%202%20(Gostos).png)
+![Registo – Passo 2 (Gostos)](Registo–Passo-2(Gostos).png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -43,7 +43,7 @@ Este documento liga cada ecrã às histórias de utilizador que ele cobre. Cada 
 
 ## 3. Descobrir livros
 
-![Descobrir livros](Descobrir%20livros.png)
+![Descobrir livros](Descobrir-livros.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -63,7 +63,7 @@ Correspondência entre botões e histórias: **Passar** → US-03, **Voltar** �
 
 ## 4. A minha estante
 
-![A minha estante](A%20minha%20estante.png)
+![A minha estante](A-minha-estante.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -76,7 +76,7 @@ Correspondência entre botões e histórias: **Passar** → US-03, **Voltar** �
 
 ## 5. Ações do livro
 
-![Ações do livro](Ações%20do%20livro.png)
+![Ações do livro](Ações-do-livro.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -91,7 +91,7 @@ Correspondência entre opções e histórias: **Mover para "A ler"** → US-18, 
 
 ## 6. Perfil de leitor
 
-![Perfil de leitor](Perfil%20de%20leitor.png)
+![Perfil de leitor](Perfil-de-leitor.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
