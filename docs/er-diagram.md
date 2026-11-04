@@ -35,7 +35,8 @@ erDiagram
         int publicationYear "opcional"
         int pageCount "opcional"
         int coverId "opcional"
-        string language "codigo, ex: por"
+        string language "codigo, ex: eng"
+        int olPopularity "want_to_read_count da Open Library"
         string openLibraryKey UK
     }
     BOOK_GENRE {
