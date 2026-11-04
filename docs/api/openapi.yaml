@@ -1,0 +1,523 @@
+openapi: 3.0.3
+info:
+  title: BookSwipe API
+  version: 1.0.0
+  description: BookSwipe API, an app to find your next read.
+servers:
+  - url: /api/v1
+security:
+  - bearerAuth: []
+paths:
+  /deck:
+    get:
+      summary: Get the next recommended books
+      tags:
+        - Deck
+      operationId: getDeck
+      description: Returns the next recommended books (US-01, US-16).
+      parameters:
+        - $ref: '#/components/parameters/Size'
+      responses:
+        '200':
+          description: Recommended books (can be an empty array)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /deck/popular:
+    get:
+      summary: Get popular books not yet rated
+      tags:
+        - Deck
+      operationId: getPopularDeck
+      description: Returns popular books the user has not rated yet (US-17).
+      parameters:
+        - $ref: '#/components/parameters/Size'
+      responses:
+        '200':
+          description: Popular books (can be an empty array)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /swipes:
+    post:
+      summary: Register a swipe
+      tags:
+        - Swipes
+      operationId: createSwipe
+      description: |-
+        Records the user's decision about a book (US-02, US-03, US-04).
+        Right swipe = TO_READ, left swipe = REJECTED, up swipe = READ.
+        The rating is only accepted with status READ.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - bookId
+                - status
+              properties:
+                bookId:
+                  type: integer
+                  format: int64
+                status:
+                  $ref: '#/components/schemas/SwipeStatus'
+                rating:
+                  type: number
+                  minimum: 0.5
+                  maximum: 5
+                  multipleOf: 0.5
+                  description: Only with status READ. Omit if the user skipped rating.
+            examples:
+              Rated book:
+                value:
+                  bookId: 7
+                  status: READ
+                  rating: 3.5
+              Saved for later:
+                value:
+                  bookId: 3
+                  status: TO_READ
+      responses:
+        '201':
+          description: Swipe registered
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swipe'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /swipes/last:
+    delete:
+      summary: Undo the last swipe
+      tags:
+        - Swipes
+      operationId: undoLastSwipe
+      description: |-
+        Removes the user's most recent swipe (US-05) and returns its book,
+        so the client can put it back on top of the deck.
+        Recommendations stop counting that swipe.
+      responses:
+        '200':
+          description: Swipe removed; returns the book that goes back to the deck
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: The user has no swipe to undo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /swipes/{swipeId}:
+    patch:
+      summary: Update a swipe
+      tags:
+        - Swipes
+      operationId: updateSwipe
+      description: |-
+        Changes the status and/or the rating of one of the user's swipes
+        (US-07, US-08). Used to remove a book from "to read" (REJECTED)
+        or to mark it as read (READ) with an optional rating.
+        The rating is only accepted when the resulting status is READ.
+      parameters:
+        - name: swipeId
+          in: path
+          required: true
+          description: Identifier of the swipe to update.
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                status:
+                  $ref: '#/components/schemas/SwipeStatus'
+                rating:
+                  type: number
+                  minimum: 0.5
+                  maximum: 5
+                  multipleOf: 0.5
+                  description: Only with status READ.
+            examples:
+              Mark as read with a rating:
+                value:
+                  status: READ
+                  rating: 4.5
+              Stop wanting to read it:
+                value:
+                  status: REJECTED
+      responses:
+        '200':
+          description: Swipe updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Swipe'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shelf:
+    get:
+      summary: List the books on the user's shelf
+      tags:
+        - Shelf
+      operationId: getShelf
+      description: |-
+        Returns the user's books for one shelf tab (US-06), most recent first.
+        TO_READ = "Para ler", READ = "Lidos", REJECTED = "Rejeitados".
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Shelf tab to list.
+          schema:
+            $ref: '#/components/schemas/SwipeStatus'
+      responses:
+        '200':
+          description: Books in that tab (can be an empty array)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - swipeId
+                    - status
+                    - book
+                  properties:
+                    swipeId:
+                      type: integer
+                      format: int64
+                    status:
+                      $ref: '#/components/schemas/SwipeStatus'
+                    rating:
+                      type: number
+                      nullable: true
+                      minimum: 0.5
+                      maximum: 5
+                      multipleOf: 0.5
+                      description: Only for READ. Null if the user skipped rating.
+                    book:
+                      $ref: '#/components/schemas/Book'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /genres:
+    get:
+      summary: List the available genres
+      tags:
+        - Genres
+      operationId: getGenres
+      description: Returns all the genres the user can choose from (US-10).
+      responses:
+        '200':
+          description: All genres
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - genreId
+                    - name
+                  properties:
+                    genreId:
+                      type: integer
+                      format: int32
+                    name:
+                      type: string
+                      example: Fantasy
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /me/genres:
+    put:
+      summary: Save the user's favourite genres
+      tags:
+        - Genres
+      operationId: setMyGenres
+      description: |-
+        Replaces the user's favourite genres with the given list (US-10).
+        At least 3 genres are required. Whatever was saved before is discarded.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - genreIds
+              properties:
+                genreIds:
+                  type: array
+                  minItems: 3
+                  uniqueItems: true
+                  items:
+                    type: integer
+                    format: int32
+            example:
+              genreIds:
+                - 1
+                - 4
+                - 9
+      responses:
+        '204':
+          description: Genres saved
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /auth/register:
+    post:
+      summary: Create an account
+      tags:
+        - Auth
+      operationId: register
+      description: |-
+        Creates an account with name, e-mail and password (US-12).
+        Returns a token, so the user can go straight to the genre questionnaire.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - password
+              properties:
+                name:
+                  type: string
+                  minLength: 1
+                  maxLength: 100
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  maxLength: 72
+            example:
+              name: Marta
+              email: marta@example.com
+              password: a-long-password
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: An account with this e-mail already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /auth/login:
+    post:
+      summary: Log in
+      tags:
+        - Auth
+      operationId: login
+      description: |-
+        Logs the user in with e-mail and password (US-13) and returns a token.
+        The error does not say which of the two is wrong.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+            example:
+              email: marta@example.com
+              password: a-long-password
+      responses:
+        '200':
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Wrong e-mail or password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    Size:
+      name: size
+      in: query
+      required: false
+      description: Number of books to return.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 50
+        default: 10
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: EMAIL_ALREADY_USED
+        message:
+          type: string
+    Book:
+      type: object
+      required:
+        - bookId
+        - title
+        - authors
+      properties:
+        bookId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+        synopsis:
+          type: string
+          nullable: true
+        pageCount:
+          type: integer
+          nullable: true
+        coverId:
+          type: integer
+          nullable: true
+    SwipeStatus:
+      type: string
+      enum:
+        - TO_READ
+        - REJECTED
+        - READ
+    Swipe:
+      type: object
+      required:
+        - swipeId
+        - bookId
+        - status
+        - swipedAt
+        - updatedAt
+      properties:
+        swipeId:
+          type: integer
+          format: int64
+        bookId:
+          type: integer
+          format: int64
+        status:
+          $ref: '#/components/schemas/SwipeStatus'
+        rating:
+          type: number
+          nullable: true
+          minimum: 0.5
+          maximum: 5
+          multipleOf: 0.5
+          description: Only with status READ. Null if the user skipped rating.
+        swipedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    AuthResponse:
+      type: object
+      required:
+        - accessToken
+      properties:
+        accessToken:
+          type: string
+          description: 'JWT to send as "Authorization: Bearer <token>".'
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: No session or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource does not exist
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: The request conflicts with the current state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
