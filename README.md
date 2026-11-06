@@ -1,47 +1,90 @@
 # BookSwipe
 
-Uma app para descobrires a tua próxima leitura. Em vez de pesquisar, fazes *swipe* num baralho de livros: guardas os que te interessam, rejeitas os que não, e marcas os que já leste. Quanto mais fazes swipe, melhores ficam as recomendações.
+An app for discovering your next read. Instead of searching, you swipe through a deck of books: save the ones that interest you, reject the ones that don't, and mark the ones you've already read. The more you swipe, the better the recommendations get.
 
-> **Estado:** em fase de design. A documentação (histórias, wireframes, modelo de dados e API) está feita; o `backend/` e o `frontend/` ainda não têm código.
+> **Status:** design phase. The documentation (user stories, wireframes, data model and API) is done; `backend/` and `frontend/` don't have code yet.
 
-## Como funciona
+## How it works
 
-| Gesto | Ação |
+| Gesture | Action |
 | --- | --- |
-| Swipe para a direita | Guardar na lista "para ler" |
-| Swipe para a esquerda | Não me interessa |
-| Swipe para cima | Já li (com nota opcional de 0,5 a 5 estrelas) |
-| Voltar | Desfazer o último swipe |
+| Swipe right | Save to the "to read" list |
+| Swipe left | Not interested |
+| Swipe up | Already read (with an optional 0.5 to 5 star rating) |
+| Back | Undo the last swipe |
 
-Depois, a estante organiza os livros por separadores (para ler, a ler, lidos, rejeitados). Os dados dos livros vêm da [Open Library](https://openlibrary.org/).
+The shelf then organizes books into tabs (to read, reading, read, rejected). Book data comes from [Open Library](https://openlibrary.org/).
 
-## Documentação
+## Documentation
 
-| Documento | Conteúdo |
+| Document | Contents |
 | --- | --- |
-| [docs/wireframes/](docs/wireframes/README.md) | Ecrãs e histórias de utilizador (US-01 a US-19) com critérios de aceitação |
-| [docs/er-diagram.md](docs/er-diagram.md) | Modelo de dados (diagrama ER em Mermaid) |
-| [docs/api/openapi.yaml](docs/api/openapi.yaml) | Especificação OpenAPI 3.0 da API REST (`/api/v1`) |
+| [docs/wireframes/](docs/wireframes/README.md) | Screens and user stories (US-01 to US-19) with acceptance criteria |
+| [docs/er-diagram.md](docs/er-diagram.md) | Data model (Mermaid ER diagram) |
+| [docs/api/openapi.yaml](docs/api/openapi.yaml) | OpenAPI 3.0 specification of the REST API (`/api/v1`) |
 
-## Estrutura do repositório
+## Repository structure
 
 ```text
-backend/     API (por implementar)
-frontend/    App cliente (por implementar)
-docs/        Wireframes, diagrama ER e especificação da API
-learning/    Registo de aprendizagem (ver CLAUDE.md)
-.github/     Template de pull request e workflows
+backend/     API (not implemented yet)
+frontend/    Client app (not implemented yet)
+docs/        Wireframes, ER diagram and API specification
+learning/    Learning log (see CLAUDE.md)
+.github/     Pull request template and workflows
 ```
 
-## Contribuir
+## Running the database with Docker
 
-- Os títulos dos PRs seguem [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`…).
-- Se alterares um endpoint, atualiza `docs/api/openapi.yaml`.
-- Se alterares a base de dados, cria uma nova migração Flyway; não edites uma já aplicada.
-- Não incluas segredos (`.env`, chaves, palavras-passe). Usa `.env.example` como referência.
+Prerequisites: [Docker](https://docs.docker.com/get-docker/) with the Compose plugin (`docker compose`).
 
-O template do PR está em [.github/pull_request_template.md](.github/pull_request_template.md).
+1. Create your local environment file from the example:
 
-## Licença
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit `.env` and set at least `POSTGRES_PASSWORD`. `POSTGRES_DB` and `POSTGRES_USER` default to `bookswipe`.
+
+3. Start PostgreSQL in the background:
+
+   ```bash
+   docker compose up -d
+   ```
+
+4. Check that it is ready. The `db` service should show `healthy`:
+
+   ```bash
+   docker compose ps
+   ```
+
+PostgreSQL 17 is then available on **`localhost:5433`** (host port 5433, mapped to 5432 inside the container). To connect with `psql`:
+
+```bash
+psql -h localhost -p 5433 -U bookswipe -d bookswipe
+```
+
+Useful commands:
+
+| Command | What it does |
+| --- | --- |
+| `docker compose logs -f db` | Follow the database logs |
+| `docker compose stop` | Stop the container, keeping the data |
+| `docker compose down` | Remove the container, keeping the data |
+| `docker compose down -v` | Remove the container **and delete the data** (`pgdata` volume) |
+
+Data is stored in the named volume `pgdata`, so it survives restarts and `docker compose down`.
+
+> **Note:** the credentials are read from `.env` only when the volume is first created. If you change `POSTGRES_USER`, `POSTGRES_PASSWORD` or `POSTGRES_DB` later, run `docker compose down -v` to recreate the database with the new values.
+
+## Contributing
+
+- PR titles follow [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`, `docs:`, `chore:`…).
+- If you change an endpoint, update `docs/api/openapi.yaml`.
+- If you change the database, add a new Flyway migration; don't edit one that has already been applied.
+- Don't include secrets (`.env`, keys, passwords). Use `.env.example` as a reference.
+
+The PR template is at [.github/pull_request_template.md](.github/pull_request_template.md).
+
+## License
 
 [GNU AGPL v3](LICENSE)
