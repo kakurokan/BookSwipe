@@ -7,10 +7,14 @@ name: Qodana
 on:
   workflow_dispatch:
   pull_request:
+    paths:
+      - "backend/**"
+      - "qodana.yaml"
   push:
-    branches:
-      - main
-      - 9-projeto-spring-boot-e-ci
+    branches: [main]
+    paths:
+      - "backend/**"
+      - "qodana.yaml"
 
 jobs:
   qodana:
