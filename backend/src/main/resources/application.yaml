@@ -1,3 +1,35 @@
 spring:
   application:
     name: backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate #Hibernate confere o esquema do Flyway
+    open-in-view: false
+
+  flyway:
+    enabled: true
+
+bookswipe:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration-minutes: 60
+
+  recommendation:
+    weights:
+      to-read: 1.0
+      rejected: -0.5
+      read-no-rating: 0.5
+      rating-baseline: 3     # livro lido com nota: peso = nota - 3
+      onboarding-genre: 1.0
+      author: 0.5
+      era: 0.3
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
