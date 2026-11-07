@@ -10,7 +10,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate:api": "openapi-typescript ../docs/api/openapi.yaml -o src/api/types.gen.ts"
+    "generate:api": "mkdir -p src/api && openapi-typescript ../docs/api/openapi.yaml -o src/api/types.gen.ts"
   },
   "dependencies": {
     "react": "^19.3.1",
