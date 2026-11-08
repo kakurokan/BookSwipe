@@ -1,6 +1,5 @@
 # Ignore artifacts:
 build
 coverage
-
-
+public/mockServiceWorker.js
 src/api/types.gen.ts
