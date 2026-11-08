@@ -41,6 +41,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 frontend/src/api/types.gen.ts
+frontend/public/mockServiceWorker.js
 # ---------- Base de dados e dados locais ----------
 # Dados do PostgreSQL se usarem bind mount em vez de volume nomeado
 pgdata/
