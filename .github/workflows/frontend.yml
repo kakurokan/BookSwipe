@@ -32,7 +32,10 @@ jobs:
 
       - name: Instalar dependências
         run: npm ci
-
+        
+      - name: Gerar tipos da API
+        run: npm run generate:api
+        
       - name: Verificar formatação (Prettier)
         run: npm run format:check
 
