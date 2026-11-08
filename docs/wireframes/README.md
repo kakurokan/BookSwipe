@@ -6,19 +6,38 @@ Este documento liga cada ecrã às histórias de utilizador que ele cobre. Cada 
 
 | Wireframe | Histórias principais | Também relacionadas |
 |---|---|---|
-| [Registo](#1-registo) | US-12 | US-13 |
-| [Registo – Passo 2 (Gostos)](#2-registo--passo-2-gostos) | US-10, US-11 | US-08, US-16 |
-| [Descobrir livros](#3-descobrir-livros) | US-01, US-02, US-03, US-04, US-05, US-16, US-17 | US-08 |
-| [A minha estante](#4-a-minha-estante) | US-06, US-09 | US-18, US-19 |
-| [Ações do livro](#5-ações-do-livro) | US-07, US-08, US-18, US-19 | — |
-| [Perfil de leitor](#6-perfil-de-leitor) | US-14 | US-10, US-15 |
-| [Sem wireframe](#7-histórias-sem-wireframe) | US-13, US-15 | — |
+| [Iniciar sessão](#1-iniciar-sessão) | US-13 | — |
+| [Registo](#2-registo) | US-12 | US-13 |
+| [Registo – Passo 2 (Gostos)](#3-registo--passo-2-gostos) | US-10, US-11 | US-08, US-16 |
+| [Descobrir livros](#4-descobrir-livros) | US-01, US-02, US-03, US-04, US-05, US-16, US-17 | US-08 |
+| [A minha estante](#5-a-minha-estante) | US-06, US-09 | US-18, US-19 |
+| [Ações do livro](#6-ações-do-livro) | US-07, US-08, US-18, US-19 | — |
+| [Perfil de leitor](#7-perfil-de-leitor) | US-14 | US-10, US-15 |
+| [Sem wireframe](#8-histórias-sem-wireframe) | US-15 | — |
 
 ---
 
-## 1. Registo
+## 1. Iniciar sessão
 
-![Registo](Registo.png)
+**Mobile**
+![Iniciar sessão (mobile)](<mobile/Container (Iniciar sessão).png>)
+
+**PC**
+![Iniciar sessão (PC)](pc/Login.png)
+
+| ID | Épico | História | Critérios de aceitação |
+|---|---|---|---|
+| US-13 | Conta | Como leitor, quero iniciar sessão para continuar de onde parei. | Com e-mail e palavra-passe corretos, entro no deck.<br>Com dados errados, vejo uma mensagem que não diz qual dos dois está errado.<br>A minha estante e os meus swipes anteriores continuam lá. |
+
+---
+
+## 2. Registo
+
+**Mobile**
+![Registo (mobile)](mobile/Registo.png)
+
+**PC**
+![Registo (PC)](pc/Registo.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -28,9 +47,13 @@ Este documento liga cada ecrã às histórias de utilizador que ele cobre. Cada 
 
 ---
 
-## 2. Registo – Passo 2 (Gostos)
+## 3. Registo – Passo 2 (Gostos)
 
-![Registo – Passo 2 (Gostos)](Registo–Passo-2(Gostos).png)
+**Mobile**
+![Registo – Passo 2 (Gostos) (mobile)](mobile/Registo–Passo-2(Gostos).png)
+
+**PC**
+![Gostos (PC)](<pc/Os teus Gostos.png>)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -41,9 +64,13 @@ Este documento liga cada ecrã às histórias de utilizador que ele cobre. Cada 
 
 ---
 
-## 3. Descobrir livros
+## 4. Descobrir livros
 
-![Descobrir livros](Descobrir-livros.png)
+**Mobile**
+![Descobrir livros (mobile)](mobile/Descobrir-livros.png)
+
+**PC**
+![Descobrir (PC)](pc/Descobrir.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -61,9 +88,13 @@ Correspondência entre botões e histórias: **Passar** → US-03, **Voltar** �
 
 ---
 
-## 4. A minha estante
+## 5. A minha estante
 
-![A minha estante](A-minha-estante.png)
+**Mobile**
+![A minha estante (mobile)](mobile/A-minha-estante.png)
+
+**PC**
+![A minha estante (PC)](<pc/A minha estante.png>)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -74,9 +105,13 @@ Correspondência entre botões e histórias: **Passar** → US-03, **Voltar** �
 
 ---
 
-## 5. Ações do livro
+## 6. Ações do livro
 
-![Ações do livro](Ações-do-livro.png)
+**Mobile**
+![Ações do livro (mobile)](mobile/Ações-do-livro.png)
+
+**PC**
+![Opções livro estante (PC)](<pc/Opções livro estante.png>)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -89,9 +124,13 @@ Correspondência entre opções e histórias: **Mover para "A ler"** → US-18, 
 
 ---
 
-## 6. Perfil de leitor
+## 7. Perfil de leitor
 
-![Perfil de leitor](Perfil-de-leitor.png)
+**Mobile**
+![Perfil de leitor (mobile)](mobile/Perfil-de-leitor.png)
+
+**PC**
+![Perfil (PC)](pc/Perfil.png)
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
@@ -101,20 +140,18 @@ Correspondência entre opções e histórias: **Mover para "A ler"** → US-18, 
 
 ---
 
-## 7. Histórias sem wireframe
+## 8. Histórias sem wireframe
 
 | ID | Épico | História | Critérios de aceitação |
 |---|---|---|---|
-| US-13 | Conta | Como leitor, quero iniciar sessão para continuar de onde parei. | Com e-mail e palavra-passe corretos, entro no deck.<br>Com dados errados, vejo uma mensagem que não diz qual dos dois está errado.<br>A minha estante e os meus swipes anteriores continuam lá. |
 | US-15 | Conta | Como leitor, quero apagar a minha conta para remover os meus dados da app. | A app pede confirmação antes de apagar.<br>A conta, os swipes e as notas são apagados.<br>Depois de apagar, não consigo iniciar sessão com esse e-mail. |
 
 ---
 
-## 8. Diferenças entre wireframes e histórias
+## 9. Diferenças entre wireframes e histórias
 
 Pontos a resolver, num lado ou no outro:
 
 - **Separador em falta:** a estante tem "Quero ler", "A ler" e "Lidos", mas a US-06 e a US-09 precisam de um separador Rejeitados.
 - **Nomes diferentes:** as histórias dizem "para ler" e os wireframes dizem "Quero ler".
 - **Falta a janela de avaliação:** não há wireframe da janela de estrelas usada pela US-04, US-07, US-08, US-11 e US-19.
-- **Falta o ecrã de início de sessão** (US-13) e o fluxo para apagar a conta (US-15).
