@@ -7,14 +7,14 @@ config:
   layout: elk
 ---
 erDiagram
-    USER ||--o{ SWIPE : makes
-    BOOK ||--o{ SWIPE : receives
-    BOOK ||--|{ BOOK_GENRE : has
-    GENRE ||--o{ BOOK_GENRE : categorizes
-    BOOK ||--|{ BOOK_AUTHOR : has
-    AUTHOR ||--o{ BOOK_AUTHOR : contributes
-    USER ||--o{ USER_GENRE : saves
-    GENRE ||--o{ USER_GENRE : appears_in
+    USER ||--o{ SWIPE: makes
+    BOOK ||--o{ SWIPE: receives
+    BOOK ||--|{ BOOK_GENRE: has
+    GENRE ||--o{ BOOK_GENRE: categorizes
+    BOOK ||--|{ BOOK_AUTHOR: has
+    AUTHOR ||--o{ BOOK_AUTHOR: contributes
+    USER ||--o{ USER_GENRE: saves
+    GENRE ||--o{ USER_GENRE: appears_in
 
     USER {
         bigint userId PK
@@ -27,6 +27,7 @@ erDiagram
         int genreId PK
         string name UK
         text description "opcional"
+        string slug UK
     }
     BOOK {
         bigint bookId PK
