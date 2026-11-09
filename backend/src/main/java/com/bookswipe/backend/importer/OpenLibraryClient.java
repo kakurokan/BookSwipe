@@ -13,8 +13,10 @@ class OpenLibraryClient {
                     + "cover_i,number_of_pages_median,want_to_read_count";
 
     private final RestClient restClient;
+    private final long pauseMs;
 
     OpenLibraryClient(ImporterProperties props) {
+        this.pauseMs = props.pauseMs();
         this.restClient =
                 RestClient.builder()
                         .baseUrl("https://openlibrary.org")
@@ -24,6 +26,7 @@ class OpenLibraryClient {
     }
 
     OpenLibrarySearchResponse searchBySubject(String subject, int page, int limit) {
+        pause();
         return restClient
                 .get()
                 .uri(uri ->
@@ -39,10 +42,20 @@ class OpenLibraryClient {
     }
 
     OpenLibraryWork fetchWork(String workId) {
+        pause();
         return restClient
                 .get()
                 .uri("/works/{id}.json", workId)
                 .retrieve()
                 .body(OpenLibraryWork.class);
+    }
+
+    private void pause() {
+        try {
+            Thread.sleep(pauseMs);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Interrupted while waiting between requests", e);
+        }
     }
 }

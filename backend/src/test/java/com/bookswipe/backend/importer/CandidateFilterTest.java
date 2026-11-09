@@ -30,6 +30,24 @@ class CandidateFilterTest {
     }
 
     @Test
+    void missingKeyIsRejected() {
+        var doc =
+                new OpenLibrarySearchResponse.Doc(
+                        null, "Title", List.of("Author"), List.of("OL1A"), 2000, 123, 300, 500);
+
+        assertThat(filter.reject(doc)).contains(SkipReason.NO_KEY);
+    }
+
+    @Test
+    void blankKeyIsRejected() {
+        var doc =
+                new OpenLibrarySearchResponse.Doc(
+                        "  ", "Title", List.of("Author"), List.of("OL1A"), 2000, 123, 300, 500);
+
+        assertThat(filter.reject(doc)).contains(SkipReason.NO_KEY);
+    }
+
+    @Test
     void blankTitleIsRejected() {
         var doc = doc("   ", List.of("Author"), List.of("OL1A"), 500);
 

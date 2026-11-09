@@ -15,6 +15,10 @@ public class CandidateFilter {
     }
 
     Optional<SkipReason> reject(OpenLibrarySearchResponse.Doc doc) {
+        if (doc.key() == null || doc.key().isBlank()) {
+            return Optional.of(SkipReason.NO_KEY);
+        }
+
         if (doc.title() == null || doc.title().isBlank()) {
             return Optional.of(SkipReason.NO_TITLE);
         }
