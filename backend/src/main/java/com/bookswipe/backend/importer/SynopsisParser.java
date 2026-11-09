@@ -23,9 +23,6 @@ final class SynopsisParser {
     }
 
     static String normalize(String text) {
-        return text.replace("\r\n", "\n").
-                replace('\r', '\n').
-                replaceAll("\n{3,}", "\n\n").
-                strip();
+        return text.replace("\r\n", "\n").replace('\r', '\n').replaceAll("\n{3,}", "\n\n").strip();
     }
 }
