@@ -35,11 +35,12 @@ CREATE TABLE books
     publication_year INTEGER,
     page_count       INTEGER,
     cover_id         INTEGER,
-    language         VARCHAR(10)  NOT NULL,
+    language         VARCHAR(3)   NOT NULL,
     ol_popularity    INTEGER      NOT NULL DEFAULT 0,
     open_library_key VARCHAR(50)  NOT NULL UNIQUE
         CONSTRAINT ck_books_page_count CHECK ( page_count IS NULL OR page_count > 0),
-    CONSTRAINT ck_books_ol_popularity CHECK ( ol_popularity >= 0 )
+    CONSTRAINT ck_books_ol_popularity CHECK ( ol_popularity >= 0 ),
+    CONSTRAINT ck_books_language CHECK (language ~ '^[a-z]{3}$')
 );
 CREATE INDEX idx_books_popularity ON books (ol_popularity DESC);
 
@@ -61,14 +62,14 @@ CREATE INDEX idx_book_genres_genre ON book_genres (genre_id);
 
 CREATE TABLE user_genres
 (
-    book_id  BIGINT  NOT NULL REFERENCES books (book_id) ON DELETE CASCADE,
+    user_id  BIGINT  NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     genre_id INTEGER NOT NULL REFERENCES genres (genre_id) ON DELETE CASCADE,
-    PRIMARY KEY (book_id, genre_id)
+    PRIMARY KEY (user_id, genre_id)
 );
 
 CREATE TABLE swipes
 (
-    swipes_id  BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    swipe_id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id    BIGINT      NOT NULL REFERENCES users (user_id) ON DELETE CASCADE,
     book_id    BIGINT      NOT NULL REFERENCES books (book_id) ON DELETE CASCADE,
     status     VARCHAR(20) NOT NULL,
