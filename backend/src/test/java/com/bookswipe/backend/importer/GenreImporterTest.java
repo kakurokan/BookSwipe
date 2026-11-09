@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClientException;
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
@@ -163,15 +164,43 @@ class GenreImporterTest {
     }
 
     @Test
-    void existingBooksAreSkippedWithoutFetchingTheirDescription() {
+    void existingBooksGainTheGenreWithoutFetchingTheirDescription() {
         stubSearch(List.of(doc("OL1W", 500)));
-        when(repository.existsBook("OL1W")).thenReturn(true);
+        when(repository.findBookId("OL1W")).thenReturn(Optional.of(42L));
+        when(repository.linkGenre(42L, GENRE.id())).thenReturn(true);
+
+        importer.importGenre(GENRE, summary);
+
+        assertThat(summary.linked()).isEqualTo(1);
+        assertThat(summary.imported()).isZero();
+        assertThat(summary.importedIn("Fantasy")).isEqualTo(1);
+        verify(client, never()).fetchWork(anyString());
+        verify(repository, never()).saveBook(any());
+    }
+
+    @Test
+    void anExistingLinkFromAnEarlierRunIsSkippedAndNotCounted() {
+        stubSearch(List.of(doc("OL1W", 500)));
+        when(repository.findBookId("OL1W")).thenReturn(Optional.of(42L));
+        when(repository.linkGenre(42L, GENRE.id())).thenReturn(false);
 
         importer.importGenre(GENRE, summary);
 
         assertThat(summary.skipped(SkipReason.ALREADY_IMPORTED)).isEqualTo(1);
-        verify(client, never()).fetchWork(anyString());
-        verify(repository, never()).saveBook(any());
+        assertThat(summary.linked()).isZero();
+        assertThat(summary.importedIn("Fantasy")).isZero();
+    }
+
+    @Test
+    void aFailedLinkIsCountedAndDoesNotPropagate() {
+        stubSearch(List.of(doc("OL1W", 500)));
+        when(repository.findBookId("OL1W")).thenReturn(Optional.of(42L));
+        when(repository.linkGenre(anyLong(), anyInt()))
+                .thenThrow(new DataIntegrityViolationException("boom"));
+
+        importer.importGenre(GENRE, summary);
+
+        assertThat(summary.skipped(SkipReason.SAVE_FAILED)).isEqualTo(1);
     }
 
     @Test

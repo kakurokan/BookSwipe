@@ -77,9 +77,9 @@ class GenreImporter {
     private boolean importBook(
             OpenLibrarySearchResponse.Doc doc, Genre genre, ImportSummary summary) {
         String workId = doc.workId();
-        if (repository.existsBook(workId)) {
-            summary.recordSkipped(SkipReason.ALREADY_IMPORTED);
-            return false;
+        Optional<Long> existingId = repository.findBookId(workId);
+        if (existingId.isPresent()) {
+            return linkExistingBook(existingId.get(), workId, genre, summary);
         }
 
         OpenLibraryWork work;
@@ -112,6 +112,25 @@ class GenreImporter {
             return true;
         } catch (DataAccessException e) {
             log.warn("Could not save work {}: {}", workId, e.getMessage());
+            summary.recordSkipped(SkipReason.SAVE_FAILED);
+            return false;
+        }
+    }
+
+    /**
+     * The book is already stored: no description request, just one more genre link.
+     */
+    private boolean linkExistingBook(
+            long bookId, String workId, Genre genre, ImportSummary summary) {
+        try {
+            if (!repository.linkGenre(bookId, genre.id())) {
+                summary.recordSkipped(SkipReason.ALREADY_IMPORTED); // link from an earlier run
+                return false;
+            }
+            summary.recordLinked(genre.name());
+            return true;
+        } catch (DataAccessException e) {
+            log.warn("Could not link work {} to {}: {}", workId, genre.name(), e.getMessage());
             summary.recordSkipped(SkipReason.SAVE_FAILED);
             return false;
         }

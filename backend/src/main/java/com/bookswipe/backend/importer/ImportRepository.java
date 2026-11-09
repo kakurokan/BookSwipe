@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Repository
 class ImportRepository {
@@ -50,13 +51,21 @@ class ImportRepository {
                                 rs.getInt("genre_id"), rs.getString("name"), rs.getString("slug")));
     }
 
-    boolean existsBook(String openLibraryKey) {
-        Boolean exists =
-                jdbc.queryForObject(
-                        "SELECT EXISTS (SELECT 1 FROM books WHERE open_library_key = ?)",
-                        Boolean.class,
-                        openLibraryKey);
-        return Boolean.TRUE.equals(exists);
+    Optional<Long> findBookId(String openLibraryKey) {
+        return jdbc
+                .query(
+                        "SELECT book_id FROM books WHERE open_library_key = ?",
+                        (rs, rowNum) -> rs.getLong(1),
+                        openLibraryKey)
+                .stream()
+                .findFirst();
+    }
+
+    /**
+     * Links an existing book to one more genre. Returns false when the link already existed.
+     */
+    boolean linkGenre(long bookId, int genreId) {
+        return jdbc.update(INSERT_BOOK_GENRE, bookId, genreId) == 1;
     }
 
     /**

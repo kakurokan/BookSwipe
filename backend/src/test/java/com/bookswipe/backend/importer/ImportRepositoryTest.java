@@ -138,15 +138,28 @@ class ImportRepositoryTest {
         assertThat(repository.saveBook(book)).isTrue();
     }
 
-    // ---------- existsBook / findGenres ----------
+    // ---------- findBookId / linkGenre / findGenres ----------
 
     @Test
-    void existsBookReflectsWhatWasSaved() {
-        assertThat(repository.existsBook("OL1W")).isFalse();
+    void findBookIdReflectsWhatWasSaved() {
+        assertThat(repository.findBookId("OL1W")).isEmpty();
 
         repository.saveBook(book("OL1W", "OL1A", genreId));
 
-        assertThat(repository.existsBook("OL1W")).isTrue();
+        assertThat(repository.findBookId("OL1W")).isPresent();
+    }
+
+    @Test
+    void linkGenreAddsASecondGenreOnceAndIgnoresRepeats() {
+        repository.saveBook(book("OL1W", "OL1A", genreId));
+        long bookId = repository.findBookId("OL1W").orElseThrow();
+
+        assertThat(repository.linkGenre(bookId, otherGenreId)).isTrue();
+        assertThat(repository.linkGenre(bookId, otherGenreId)).isFalse();
+        assertThat(repository.linkGenre(bookId, genreId)).isFalse();
+
+        assertThat(count("SELECT count(*) FROM book_genres WHERE book_id = ?", bookId))
+                .isEqualTo(2);
     }
 
     @Test
