@@ -3,3 +3,5 @@ bookswipe:
     contact: ${OPENLIBRARY_CONTACT}   # sem valor por defeito: sem email, o importador não arranca
     pause-ms: 400                     # pausa entre pedidos (limite de ~1 pedido/s)
     min-synopsis-length: 50           # ignora livros com sinopse mais curta
+    min-popularity: 100
+    books-per-genre: 20

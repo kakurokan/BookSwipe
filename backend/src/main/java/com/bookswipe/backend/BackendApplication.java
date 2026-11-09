@@ -1,9 +1,12 @@
 package com.bookswipe.backend;
 
+import com.bookswipe.backend.importer.ImporterProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
+@EnableConfigurationProperties(ImporterProperties.class)
 public class BackendApplication {
 
     public static void main(String[] args) {
