@@ -10,7 +10,7 @@ import org.springframework.validation.annotation.Validated;
 public record ImporterProperties(
         @NotBlank String contact,
         @Positive long pauseMs,
-        @Positive int minSynopisLength,
+        @Positive int minSynopsisLength,
         int minPopularity,
         @Positive int booksPerGenre) {
 }

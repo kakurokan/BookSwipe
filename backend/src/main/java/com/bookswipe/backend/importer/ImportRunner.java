@@ -17,7 +17,7 @@ public class ImportRunner implements CommandLineRunner {
 
     private final ImporterProperties props;
 
-    public ImportRunner(ImporterProperties props) {
+    ImportRunner(ImporterProperties props) {
         this.props = props;
     }
 
