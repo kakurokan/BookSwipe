@@ -23,7 +23,9 @@ public class ImportRunner implements CommandLineRunner {
 
     @Override
     public void run(String @NonNull ... args) throws Exception {
-        log.info("Importer started (pause={} ms, {} books per genre)",
-                props.pauseMs(), props.booksPerGenre());
+        log.info(
+                "Importer started (pause={} ms, {} books per genre)",
+                props.pauseMs(),
+                props.booksPerGenre());
     }
 }

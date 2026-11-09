@@ -5,7 +5,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
-
 @Component
 @Profile("import")
 class OpenLibraryClient {
@@ -16,26 +15,34 @@ class OpenLibraryClient {
     private final RestClient restClient;
 
     OpenLibraryClient(ImporterProperties props) {
-        this.restClient = RestClient.builder().baseUrl("https://openlibrary.org")
-                .defaultHeader(
-                        HttpHeaders.USER_AGENT,
-                        "BookSwipe/1.0 (" + props.contact() + ")")
-                .build();
+        this.restClient =
+                RestClient.builder()
+                        .baseUrl("https://openlibrary.org")
+                        .defaultHeader(
+                                HttpHeaders.USER_AGENT, "BookSwipe/1.0 (" + props.contact() + ")")
+                        .build();
     }
 
     OpenLibrarySearchResponse searchBySubject(String subject, int page, int limit) {
         return restClient
                 .get()
-                .uri(
-                        uri ->
-                                uri.path("/search.json")
-                                        .queryParam("q", "subject:" + subject + " language:eng")
-                                        .queryParam("fields", FIELDS)
-                                        .queryParam("sort", "want_to_read")
-                                        .queryParam("limit", limit)
-                                        .queryParam("page", page)
-                                        .build())
+                .uri(uri ->
+                        uri.path("/search.json")
+                                .queryParam("q", "subject:" + subject + " language:eng")
+                                .queryParam("fields", FIELDS)
+                                .queryParam("sort", "want_to_read")
+                                .queryParam("limit", limit)
+                                .queryParam("page", page)
+                                .build())
                 .retrieve()
                 .body(OpenLibrarySearchResponse.class);
+    }
+
+    OpenLibraryWork fetchWork(String workId) {
+        return restClient
+                .get()
+                .uri("/works/{id}.json", workId)
+                .retrieve()
+                .body(OpenLibraryWork.class);
     }
 }
