@@ -1,12 +1,10 @@
-import { render,screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react';
 
 function MockHeader() {
-    return (
-        <header>BookSwipe</header>
-    )
+  return <header>BookSwipe</header>;
 }
 
 test('Header should be on page', async () => {
-    render(<MockHeader />)
-    expect(screen.getByText('BookSwipe')).toBeInTheDocument()
-})
+  render(<MockHeader />);
+  expect(screen.getByText('BookSwipe')).toBeInTheDocument();
+});
