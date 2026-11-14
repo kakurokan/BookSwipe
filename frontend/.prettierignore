@@ -3,3 +3,4 @@ build
 coverage
 public/mockServiceWorker.js
 src/api/types.gen.ts
+package-lock.json
