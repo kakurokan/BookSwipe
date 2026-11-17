@@ -6,7 +6,7 @@ info:
 servers:
   - url: /api/v1
 security:
-  - bearerAuth: []
+  - bearerAuth: [ ]
 paths:
   /deck:
     get:
@@ -311,7 +311,7 @@ paths:
       description: |-
         Creates an account with name, e-mail and password (US-12).
         Returns a token, so the user can go straight to the genre questionnaire.
-      security: []
+      security: [ ]
       requestBody:
         required: true
         content:
@@ -363,7 +363,7 @@ paths:
       description: |-
         Logs the user in with e-mail and password (US-13) and returns a token.
         The error does not say which of the two is wrong.
-      security: []
+      security: [ ]
       requestBody:
         required: true
         content:
@@ -423,7 +423,15 @@ components:
         - message
       properties:
         code:
-          type: string
+          enum:
+            - UNAUTHENTICATED
+            - INVALID_CREDENTIALS
+            - EMAIL_ALREADY_USED
+            - BOOK_NOT_FOUND
+            - SWIPE_NOT_FOUND
+            - NOTHING_TO_UNDO
+            - ALREADY_SWIPED
+            - INTERNAL_ERROR
           example: EMAIL_ALREADY_USED
         message:
           type: string

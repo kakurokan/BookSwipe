@@ -85,3 +85,5 @@ Session.vim
 Thumbs.db
 desktop.ini
 .directory
+# ---------- graphify ----------
+graphify-out/
