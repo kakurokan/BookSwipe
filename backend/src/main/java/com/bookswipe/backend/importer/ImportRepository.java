@@ -15,18 +15,18 @@ class ImportRepository {
 
     private static final String INSERT_BOOK =
             """
-                    INSERT INTO books (title, synopsis, publication_year, page_count, cover_id,
-                                       language, ol_popularity, open_library_key)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT (open_library_key) DO NOTHING
-                    RETURNING book_id
-                    """;
+            INSERT INTO books (title, synopsis, publication_year, page_count, cover_id,
+                               language, ol_popularity, open_library_key)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (open_library_key) DO NOTHING
+            RETURNING book_id
+            """;
 
     private static final String INSERT_AUTHOR =
             """
-                    INSERT INTO authors (name, open_library_key) VALUES (?, ?)
-                    ON CONFLICT (open_library_key) DO NOTHING
-                    """;
+            INSERT INTO authors (name, open_library_key) VALUES (?, ?)
+            ON CONFLICT (open_library_key) DO NOTHING
+            """;
 
     private static final String SELECT_AUTHOR_ID =
             "SELECT author_id FROM authors WHERE open_library_key = ?";
@@ -61,16 +61,12 @@ class ImportRepository {
                 .findFirst();
     }
 
-    /**
-     * Links an existing book to one more genre. Returns false when the link already existed.
-     */
+    /** Links an existing book to one more genre. Returns false when the link already existed. */
     boolean linkGenre(long bookId, int genreId) {
         return jdbc.update(INSERT_BOOK_GENRE, bookId, genreId) == 1;
     }
 
-    /**
-     * Returns false when the book already existed (nothing was written).
-     */
+    /** Returns false when the book already existed (nothing was written). */
     @Transactional
     boolean saveBook(ImportedBook book) {
         List<Long> inserted =

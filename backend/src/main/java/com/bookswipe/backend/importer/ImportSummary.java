@@ -22,9 +22,7 @@ final class ImportSummary {
         importedByGenre.merge(genre, 1, Integer::sum);
     }
 
-    /**
-     * An already-imported book that gained one more genre.
-     */
+    /** An already-imported book that gained one more genre. */
     void recordLinked(String genre) {
         linked++;
         importedByGenre.merge(genre, 1, Integer::sum);

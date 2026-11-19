@@ -1,12 +1,13 @@
 package com.bookswipe.backend.importer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.json.JsonMapper;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class SynopsisParserTest {
 
@@ -53,12 +54,12 @@ class SynopsisParserTest {
     @ParameterizedTest
     @ValueSource(
             strings = {
-                    "null", // explicit JSON null
-                    "42", // a number
-                    "[]", // a list
-                    "{}", // an object without value
-                    "{\"type\":\"/type/text\"}", // typed object, still no value
-                    "{\"value\":5}" // value is not text
+                "null", // explicit JSON null
+                "42", // a number
+                "[]", // a list
+                "{}", // an object without value
+                "{\"type\":\"/type/text\"}", // typed object, still no value
+                "{\"value\":5}" // value is not text
             })
     void unusableShapesAreEmpty(String json) {
         JsonNode node = mapper.readTree(json);

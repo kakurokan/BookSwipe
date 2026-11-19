@@ -15,9 +15,7 @@ record ImportedBook(
         List<Author> authors,
         int genreId) {
 
-    /**
-     * Precondition: the doc already passed the CandidateFilter.
-     */
+    /** Precondition: the doc already passed the CandidateFilter. */
     static ImportedBook from(OpenLibrarySearchResponse.Doc doc, String synopsis, int genreId) {
         List<Author> authors = new ArrayList<>();
         for (int i = 0; i < doc.authorKeys().size(); i++) {
@@ -37,6 +35,5 @@ record ImportedBook(
                 genreId);
     }
 
-    record Author(String openLibraryKey, String name) {
-    }
+    record Author(String openLibraryKey, String name) {}
 }

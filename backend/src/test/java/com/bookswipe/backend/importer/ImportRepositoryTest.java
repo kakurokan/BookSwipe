@@ -1,6 +1,9 @@
 package com.bookswipe.backend.importer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.bookswipe.backend.TestcontainersConfiguration;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,23 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Objects;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest(
         properties = {
-                "POSTGRES_DB=test",
-                "POSTGRES_USER=test",
-                "POSTGRES_PASSWORD=test",
-                "JWT_SECRET=um-segredo-de-teste-com-mais-de-32-bytes-1234567890"
+            "POSTGRES_DB=test",
+            "POSTGRES_USER=test",
+            "POSTGRES_PASSWORD=test",
+            "JWT_SECRET=um-segredo-de-teste-com-mais-de-32-bytes-1234567890"
         })
 @Transactional
 class ImportRepositoryTest {
 
-    @Autowired
-    private ImportRepository repository;
-    @Autowired
-    private JdbcTemplate jdbc;
+    @Autowired private ImportRepository repository;
+    @Autowired private JdbcTemplate jdbc;
 
     private int genreId;
     private int otherGenreId;
@@ -50,23 +49,23 @@ class ImportRepositoryTest {
         assertThat(count("SELECT count(*) FROM books WHERE open_library_key = ?", "OL1W"))
                 .isEqualTo(1);
         assertThat(
-                count(
-                        """
+                        count(
+                                """
                                 SELECT count(*) FROM book_authors ba
                                 JOIN books b ON b.book_id = ba.book_id
                                 WHERE b.open_library_key = ?
                                 """,
-                        "OL1W"))
+                                "OL1W"))
                 .isEqualTo(1);
         assertThat(
-                count(
-                        """
+                        count(
+                                """
                                 SELECT count(*) FROM book_genres bg
                                 JOIN books b ON b.book_id = bg.book_id
                                 WHERE b.open_library_key = ? AND bg.genre_id = ?
                                 """,
-                        "OL1W",
-                        genreId))
+                                "OL1W",
+                                genreId))
                 .isEqualTo(1);
     }
 
@@ -78,13 +77,13 @@ class ImportRepositoryTest {
         assertThat(count("SELECT count(*) FROM books WHERE open_library_key = ?", "OL1W"))
                 .isEqualTo(1);
         assertThat(
-                count(
-                        """
+                        count(
+                                """
                                 SELECT count(*) FROM book_genres bg
                                 JOIN books b ON b.book_id = bg.book_id
                                 WHERE b.open_library_key = ?
                                 """,
-                        "OL1W"))
+                                "OL1W"))
                 .isEqualTo(1);
     }
 
