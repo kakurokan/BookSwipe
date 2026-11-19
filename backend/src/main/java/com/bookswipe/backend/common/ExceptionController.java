@@ -9,7 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -22,12 +22,12 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
-        String message = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> e.getField() + ": " + e.getDefaultMessage())
-                .collect(Collectors.joining("; "));
+        List<ErrorResponse.FieldViolation> details = ex.getBindingResult().getFieldErrors().stream()
+                .map(e -> new ErrorResponse.FieldViolation(e.getField(), e.getDefaultMessage()))
+                .toList();
 
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), message));
+                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "Invalid request", details));
     }
 
 
