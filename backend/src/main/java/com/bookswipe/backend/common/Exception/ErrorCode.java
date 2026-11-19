@@ -10,7 +10,8 @@ public enum ErrorCode {
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR),
     ALREADY_SWIPED(HttpStatus.CONFLICT),
     NOTHING_TO_UNDO(HttpStatus.NOT_FOUND),
-    VALIDATION_ERROR(HttpStatus.BAD_REQUEST);
+    VALIDATION_ERROR(HttpStatus.BAD_REQUEST),
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND);
 
     private final HttpStatus status;
 

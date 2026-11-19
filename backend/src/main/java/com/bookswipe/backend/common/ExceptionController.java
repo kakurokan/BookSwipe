@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.List;
 
@@ -66,6 +67,12 @@ public class ExceptionController {
 
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
                 .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResources(NoResourceFoundException ex) {
+        return ResponseEntity.status(ErrorCode.RESOURCE_NOT_FOUND.status())
+                .body(new ErrorResponse(ErrorCode.RESOURCE_NOT_FOUND.name(), "Resource not found"));
     }
 
     @ExceptionHandler(Exception.class)
