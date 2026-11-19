@@ -128,7 +128,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          description: The user has no swipe to undo
+          description: The user has no swipe to undo (NOTHING_TO_UNDO)
           content:
             application/json:
               schema:
@@ -349,7 +349,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
-          description: An account with this e-mail already exists
+          description: An account with this e-mail already exists (EMAIL_ALREADY_USED)
           content:
             application/json:
               schema:
@@ -393,7 +393,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
-          description: Wrong e-mail or password
+          description: Wrong e-mail or password (INVALID_CREDENTIALS)
           content:
             application/json:
               schema:
@@ -423,7 +423,9 @@ components:
         - message
       properties:
         code:
+          type: string
           enum:
+            - VALIDATION_ERROR
             - UNAUTHENTICATED
             - INVALID_CREDENTIALS
             - EMAIL_ALREADY_USED
@@ -435,6 +437,21 @@ components:
           example: EMAIL_ALREADY_USED
         message:
           type: string
+        details:
+          type: array
+          description: Only for VALIDATION_ERROR. One entry per invalid field.
+          items:
+            type: object
+            required:
+              - field
+              - message
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+
     Book:
       type: object
       required:
