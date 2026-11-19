@@ -2,7 +2,7 @@ package com.bookswipe.backend.common.Exception;
 
 import com.bookswipe.backend.common.ErrorResponse;
 
-public class ApiException extends RuntimeException {
+public abstract class ApiException extends RuntimeException {
     private final ErrorCode errorCode;
 
     public ApiException(String message, ErrorCode errorCode) {
