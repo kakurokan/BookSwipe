@@ -27,12 +27,17 @@ public class ExceptionController {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException ex) {
-        List<ErrorResponse.FieldViolation> details = ex.getBindingResult().getFieldErrors().stream()
-                .map(e -> new ErrorResponse.FieldViolation(e.getField(), e.getDefaultMessage()))
-                .toList();
+        List<ErrorResponse.FieldViolation> details =
+                ex.getBindingResult().getFieldErrors().stream()
+                        .map(e ->
+                                new ErrorResponse.FieldViolation(
+                                        e.getField(), e.getDefaultMessage()))
+                        .toList();
 
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "Invalid request", details));
+                .body(
+                        new ErrorResponse(
+                                ErrorCode.VALIDATION_ERROR.name(), "Invalid request", details));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -41,32 +46,43 @@ public class ExceptionController {
                 .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "invalid body"));
     }
 
-
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentTypeMismatchException ex) {
         List<ErrorResponse.FieldViolation> details =
                 List.of(new ErrorResponse.FieldViolation(ex.getName(), "Invalid value"));
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
+                .body(
+                        new ErrorResponse(
+                                ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MissingServletRequestParameterException ex) {
+    public ResponseEntity<ErrorResponse> handleValidation(
+            MissingServletRequestParameterException ex) {
         List<ErrorResponse.FieldViolation> details =
-                List.of(new ErrorResponse.FieldViolation(ex.getParameterName(), "Missing parameter"));
+                List.of(
+                        new ErrorResponse.FieldViolation(
+                                ex.getParameterName(), "Missing parameter"));
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
+                .body(
+                        new ErrorResponse(
+                                ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
     }
 
     @ExceptionHandler(HandlerMethodValidationException.class)
     public ResponseEntity<ErrorResponse> handleValidation(HandlerMethodValidationException ex) {
-        List<ErrorResponse.FieldViolation> details = ex.getBeanResults().stream()
-                .flatMap(beanErros -> beanErros.getFieldErrors().stream())
-                .map(e -> new ErrorResponse.FieldViolation(e.getField(), e.getDefaultMessage()))
-                .toList();
+        List<ErrorResponse.FieldViolation> details =
+                ex.getBeanResults().stream()
+                        .flatMap(beanErros -> beanErros.getFieldErrors().stream())
+                        .map(e ->
+                                new ErrorResponse.FieldViolation(
+                                        e.getField(), e.getDefaultMessage()))
+                        .toList();
 
         return ResponseEntity.status(ErrorCode.VALIDATION_ERROR.status())
-                .body(new ErrorResponse(ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
+                .body(
+                        new ErrorResponse(
+                                ErrorCode.VALIDATION_ERROR.name(), "invalid request", details));
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
@@ -78,10 +94,8 @@ public class ExceptionController {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleAll(Exception ex) {
         log.error("Unexpected error", ex);
-        ErrorResponse error = new ErrorResponse(
-                ErrorCode.INTERNAL_ERROR.name(),
-                "Unexpected server error"
-        );
+        ErrorResponse error =
+                new ErrorResponse(ErrorCode.INTERNAL_ERROR.name(), "Unexpected server error");
         return ResponseEntity.status(ErrorCode.INTERNAL_ERROR.status()).body(error);
     }
 }
