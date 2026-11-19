@@ -23,16 +23,18 @@ class ExceptionControllerTest {
 
     @BeforeEach
     void setUp() {
-        mvc = MockMvcBuilders.standaloneSetup(new FakeController())
-                .setControllerAdvice(new ExceptionController())
-                .build();
+        mvc =
+                MockMvcBuilders.standaloneSetup(new FakeController())
+                        .setControllerAdvice(new ExceptionController())
+                        .build();
     }
 
     @Test
     void invalidBodyReturns400WithTheFieldThatFailed() throws Exception {
-        mvc.perform(post("/fake/validation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":\"Marta\",\"email\":\"nao-e-email\"}"))
+        mvc.perform(
+                        post("/fake/validation")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":\"Marta\",\"email\":\"nao-e-email\"}"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.message").isNotEmpty())
@@ -41,9 +43,10 @@ class ExceptionControllerTest {
 
     @Test
     void malformedJsonReturns400WithoutDetails() throws Exception {
-        mvc.perform(post("/fake/validation")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"name\":"))
+        mvc.perform(
+                        post("/fake/validation")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"name\":"))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
                 .andExpect(jsonPath("$.details").doesNotExist());
@@ -86,7 +89,6 @@ class ExceptionControllerTest {
     static class FakeController {
         @PostMapping("/validation")
         void validation(@Valid @RequestBody Body body) {
-
         }
 
         @GetMapping("/type")
@@ -108,7 +110,10 @@ class ExceptionControllerTest {
             throw new IllegalStateException("Maior segredo da história");
         }
 
-        enum Color {RED, BLUE}
+        enum Color {
+            RED,
+            BLUE
+        }
 
         record Body(@NotBlank String name, @Email String email) {
         }
