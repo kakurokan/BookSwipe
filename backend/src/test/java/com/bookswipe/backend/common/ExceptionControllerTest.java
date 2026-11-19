@@ -1,21 +1,23 @@
 package com.bookswipe.backend.common;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.bookswipe.backend.common.Exception.BookNotFoundException;
 import com.bookswipe.backend.common.Exception.EmailAlreadyUsedException;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.*;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ExceptionControllerTest {
 
@@ -88,12 +90,10 @@ class ExceptionControllerTest {
     @RequestMapping("/fake")
     static class FakeController {
         @PostMapping("/validation")
-        void validation(@Valid @RequestBody Body body) {
-        }
+        void validation(@Valid @RequestBody Body body) {}
 
         @GetMapping("/type")
-        void type(@RequestParam Color color) {
-        }
+        void type(@RequestParam Color color) {}
 
         @GetMapping("/not-found")
         void notFound() {
@@ -115,7 +115,6 @@ class ExceptionControllerTest {
             BLUE
         }
 
-        record Body(@NotBlank String name, @Email String email) {
-        }
+        record Body(@NotBlank String name, @Email String email) {}
     }
 }

@@ -10,6 +10,5 @@ public record ErrorResponse(String code, String message, List<FieldViolation> de
         this(code, message, null);
     }
 
-    public record FieldViolation(String field, String message) {
-    }
+    public record FieldViolation(String field, String message) {}
 }
