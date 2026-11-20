@@ -13,5 +13,4 @@ public record ImporterProperties(
         @Positive long pauseMs,
         @Positive int minSynopsisLength,
         int minPopularity,
-        @Positive int booksPerGenre) {
-}
+        @Positive int booksPerGenre) {}

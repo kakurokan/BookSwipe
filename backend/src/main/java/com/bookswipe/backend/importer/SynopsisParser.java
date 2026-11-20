@@ -5,8 +5,7 @@ import tools.jackson.databind.JsonNode;
 import java.util.Optional;
 
 final class SynopsisParser {
-    private SynopsisParser() {
-    }
+    private SynopsisParser() {}
 
     static Optional<String> extract(JsonNode description) {
         if (description == null || description.isNull() || description.isMissingNode()) {

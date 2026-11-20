@@ -117,9 +117,7 @@ class GenreImporter {
         }
     }
 
-    /**
-     * The book is already stored: no description request, just one more genre link.
-     */
+    /** The book is already stored: no description request, just one more genre link. */
     private boolean linkExistingBook(
             long bookId, String workId, Genre genre, ImportSummary summary) {
         try {

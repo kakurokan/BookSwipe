@@ -6,7 +6,7 @@ info:
 servers:
   - url: /api/v1
 security:
-  - bearerAuth: []
+  - bearerAuth: [ ]
 paths:
   /deck:
     get:
@@ -128,7 +128,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '404':
-          description: The user has no swipe to undo
+          description: The user has no swipe to undo (NOTHING_TO_UNDO)
           content:
             application/json:
               schema:
@@ -311,7 +311,7 @@ paths:
       description: |-
         Creates an account with name, e-mail and password (US-12).
         Returns a token, so the user can go straight to the genre questionnaire.
-      security: []
+      security: [ ]
       requestBody:
         required: true
         content:
@@ -349,7 +349,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
         '409':
-          description: An account with this e-mail already exists
+          description: An account with this e-mail already exists (EMAIL_ALREADY_USED)
           content:
             application/json:
               schema:
@@ -363,7 +363,7 @@ paths:
       description: |-
         Logs the user in with e-mail and password (US-13) and returns a token.
         The error does not say which of the two is wrong.
-      security: []
+      security: [ ]
       requestBody:
         required: true
         content:
@@ -393,7 +393,7 @@ paths:
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
-          description: Wrong e-mail or password
+          description: Wrong e-mail or password (INVALID_CREDENTIALS)
           content:
             application/json:
               schema:
@@ -424,9 +424,34 @@ components:
       properties:
         code:
           type: string
+          enum:
+            - VALIDATION_ERROR
+            - UNAUTHENTICATED
+            - INVALID_CREDENTIALS
+            - EMAIL_ALREADY_USED
+            - BOOK_NOT_FOUND
+            - SWIPE_NOT_FOUND
+            - NOTHING_TO_UNDO
+            - ALREADY_SWIPED
+            - INTERNAL_ERROR
           example: EMAIL_ALREADY_USED
         message:
           type: string
+        details:
+          type: array
+          description: Only for VALIDATION_ERROR. One entry per invalid field.
+          items:
+            type: object
+            required:
+              - field
+              - message
+            properties:
+              field:
+                type: string
+                example: email
+              message:
+                type: string
+
     Book:
       type: object
       required:

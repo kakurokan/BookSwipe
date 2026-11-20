@@ -1,5 +1,10 @@
 package com.bookswipe.backend.importer;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,15 +14,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.client.RestClientException;
+
 import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GenreImporterTest {
@@ -28,10 +29,8 @@ class GenreImporterTest {
             "A synopsis that is comfortably longer than fifty characters in total.";
     private static final JsonMapper MAPPER = JsonMapper.builder().build();
     private final ImportSummary summary = new ImportSummary();
-    @Mock
-    private OpenLibraryClient client;
-    @Mock
-    private ImportRepository repository;
+    @Mock private OpenLibraryClient client;
+    @Mock private ImportRepository repository;
     private GenreImporter importer;
 
     private static OpenLibrarySearchResponse.Doc doc(String workId, int popularity) {
